@@ -1,4 +1,3 @@
-// src/commands/fileOperations.js
 import fs from 'node:fs/promises';
 import { createReadStream, createWriteStream } from 'node:fs';
 import path from 'node:path';

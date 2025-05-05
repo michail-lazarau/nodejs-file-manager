@@ -1,20 +1,16 @@
 import { commandRegistry } from './commandRegistry.js';
 import { navigationHandlers } from '../commands/navigation.js';
 import { fileOperationsHandlers } from '../commands/fileOperations.js';
+import { osInfoHandlers } from '../commands/osInfo.js';
+import { hashHandlers } from '../commands/hash.js';
+import { compressionHandlers } from '../commands/compression.js';
 
-// Import other handlers as they're implemented
-// import { fileOpsHandlers } from '../commands/fileOperations.js';
-// import { osInfoHandlers } from '../commands/osInfo.js';
-// ...
-
-// Map of command categories to their handler modules
 const handlerModules = {
   navigation: navigationHandlers,
   fileOps: fileOperationsHandlers,
-  // Add other handler modules as they're implemented
-  // fileOps: fileOpsHandlers,
-  // osInfo: osInfoHandlers,
-  // ...
+  osInfo: osInfoHandlers,
+  hash: hashHandlers,
+  compression: compressionHandlers
 };
 
 /**
