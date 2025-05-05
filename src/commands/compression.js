@@ -5,7 +5,7 @@ import { pipeline } from 'node:stream/promises';
 import fs from 'node:fs/promises';
 
 export const compressionHandlers = {
-  compress: async (args, currentDir) => {
+  compress: async ({ args, currentDir }) => {
     const sourcePath = path.resolve(currentDir, args[0]);
     const destinationPath = path.resolve(currentDir, args[1]);
     
@@ -29,7 +29,7 @@ export const compressionHandlers = {
     return null;
   },
   
-  decompress: async (args, currentDir) => {
+  decompress: async ({ args, currentDir }) => {
     const sourcePath = path.resolve(currentDir, args[0]);
     const destinationPath = path.resolve(currentDir, args[1]);
     

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
 export const hashHandlers = {
-  hash: async (args, currentDir) => {
+  hash: async ({ args, currentDir }) => {
     const filePath = path.resolve(currentDir, args[0]);
     
     try {

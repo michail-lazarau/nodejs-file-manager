@@ -4,6 +4,9 @@ import { fileOperationsHandlers } from '../commands/fileOperations.js';
 import { osInfoHandlers } from '../commands/osInfo.js';
 import { hashHandlers } from '../commands/hash.js';
 import { compressionHandlers } from '../commands/compression.js';
+import { InvalidInputError, OperationError } from './error-extensions.js';
+import { ERROR_MESSAGES } from './constants.js';
+
 
 const handlerModules = {
   navigation: navigationHandlers,
@@ -60,7 +63,13 @@ export const validateCommand = (commandName, args) => {
    */
   export const executeCommand = async (command, commandName, args, currentDir) => {
     const handler = getCommandHandler(command, commandName);
-    return await handler(args, currentDir);
+
+    const context = {
+      args,
+      currentDir
+    };
+    
+    return await handler(context);
   };
   
   /**
@@ -79,11 +88,11 @@ export const validateCommand = (commandName, args) => {
       return await executeCommand(command, commandName, args, currentDir);
     } catch (error) {
         if (error instanceof InvalidInputError) {
-            console.log('Invalid input');
+            console.error(`${ERROR_MESSAGES.INVALID_INPUT}: %s`, error.message);
           } else if (error instanceof OperationError) {
-            console.log('Operation failed');
+            console.error(`${ERROR_MESSAGES.OPERATION_FAILED}: %s`, error.message);
           } else {
-            console.error('Unexpected error:', error);
+            console.error('Unexpected error: %s', error.message);
           }
       return null;
     }

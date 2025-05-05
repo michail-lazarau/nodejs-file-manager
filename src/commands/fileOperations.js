@@ -6,15 +6,12 @@ import { stdin as input, stdout as output } from 'node:process';
 
 const noSuchResourceErrorCode = 'ENOENT';
 const resourceAlreadyExistsErrorCode = 'EEXIST';
-const errorCodes = [noSuchResourceErrorCode, resourceAlreadyExistsErrorCode];
 
 export const fileOperationsHandlers = {
-  // Read file and print its content (cat)
-  cat: async (args, currentDir) => {
+  cat: async ({ args, currentDir }) => {
     const filePath = path.resolve(currentDir, args[0]);
     
     try {
-      // Use readable stream to read the file
       await pipeline(
         createReadStream(filePath),
         output
@@ -26,9 +23,8 @@ export const fileOperationsHandlers = {
     
     return null;
   },
-  
-  // Create empty file (add)
-  add: async (args, currentDir) => {
+
+  add: async ({ args, currentDir }) => {
     const filePath = path.resolve(currentDir, args[0]);
     
     try {
@@ -48,9 +44,8 @@ export const fileOperationsHandlers = {
     
     return null;
   },
-  
-  // Create new directory (mkdir)
-  mkdir: async (args, currentDir) => {
+
+  mkdir: async ({ args, currentDir }) => {
     const dirPath = path.resolve(currentDir, args[0]);
     
     try {
@@ -61,9 +56,8 @@ export const fileOperationsHandlers = {
     
     return null;
   },
-  
-  // Rename file (rn)
-  rn: async (args, currentDir) => {
+
+  rn: async ({ args, currentDir }) => {
     const sourcePath = path.resolve(currentDir, args[0]);
     const targetPath = path.resolve(currentDir, args[1]);
     
@@ -83,28 +77,24 @@ export const fileOperationsHandlers = {
     
     return null;
   },
-  
-  // Copy file (cp)
-  cp: async (args, currentDir) => {
+
+  cp: async ({ args, currentDir }) => {
     const sourcePath = path.resolve(currentDir, args[0]);
     const targetDir = path.resolve(currentDir, args[1]);
     const fileName = path.basename(sourcePath);
     const targetPath = path.join(targetDir, fileName);
     
     try {
-      // Check if source exists and is a file
       const stats = await fs.stat(sourcePath);
       if (!stats.isFile()) {
         throw new Error('Source is not a file');
       }
       
-      // Check if target directory exists
       const targetStats = await fs.stat(targetDir);
       if (!targetStats.isDirectory()) {
         throw new Error('Target is not a directory');
       }
       
-      // Copy file using streams
       await pipeline(
         createReadStream(sourcePath),
         createWriteStream(targetPath)
@@ -115,34 +105,29 @@ export const fileOperationsHandlers = {
     
     return null;
   },
-  
-  // Move file (mv)
-  mv: async (args, currentDir) => {
+
+  mv: async ({ args, currentDir }) => {
     const sourcePath = path.resolve(currentDir, args[0]);
     const targetDir = path.resolve(currentDir, args[1]);
     const fileName = path.basename(sourcePath);
     const targetPath = path.join(targetDir, fileName);
     
     try {
-      // Check if source exists and is a file
       const stats = await fs.stat(sourcePath);
       if (!stats.isFile()) {
         throw new Error('Source is not a file');
       }
       
-      // Check if target directory exists
       const targetStats = await fs.stat(targetDir);
       if (!targetStats.isDirectory()) {
         throw new Error('Target is not a directory');
       }
       
-      // Copy file using streams
       await pipeline(
         createReadStream(sourcePath),
         createWriteStream(targetPath)
       );
       
-      // Delete source file after successful copy
       await fs.unlink(sourcePath);
     } catch (error) {
       throw new Error(`Failed to move file: ${error.message}`);
@@ -150,13 +135,11 @@ export const fileOperationsHandlers = {
     
     return null;
   },
-  
-  // Delete file (rm)
-  rm: async (args, currentDir) => {
+
+  rm: async ({ args, currentDir }) => {
     const filePath = path.resolve(currentDir, args[0]);
     
     try {
-      // Check if path exists and is a file
       const stats = await fs.stat(filePath);
       if (!stats.isFile()) {
         throw new Error('Path is not a file');

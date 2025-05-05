@@ -30,7 +30,7 @@ const osCommandHandlers = {
 };
 
 export const osInfoHandlers = {
-  os: (args) => {
+  os: ({ args }) => {
     const option = args[0];
     
     if (!osCommandHandlers[option]) {

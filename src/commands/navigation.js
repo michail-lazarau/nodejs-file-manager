@@ -5,10 +5,11 @@ import { formatTable } from '../utils/tableFormatter.js';
 export const navigationHandlers = {
   /**
    * Go up one directory
-   * @param {string} currentDir - Current working directory
+   * @param {Object} context - Command context
+   * @param {string} context.currentDir - Current working directory
    * @returns {string} - New directory
    */
-  up: (currentDir) => {
+  up: ({ currentDir }) => {
     const parentDir = path.dirname(currentDir);
     
     // Check if trying to go above root directory
@@ -21,11 +22,12 @@ export const navigationHandlers = {
 
   /**
    * Change to specified directory
-   * @param {string[]} args - Command arguments
-   * @param {string} currentDir - Current working directory
+   * @param {Object} context - Command context
+   * @param {string[]} context.args - Command arguments
+   * @param {string} context.currentDir - Current working directory
    * @returns {Promise<string>} - New directory
    */
-  cd: async (args, currentDir) => {
+  cd: async ({ args, currentDir }) => {
     const targetPath = args[0];
     let newPath;
     
@@ -45,10 +47,11 @@ export const navigationHandlers = {
 
   /**
    * List directory contents
-   * @param {string} currentDir - Current working directory
+   * @param {Object} context - Command context
+   * @param {string} context.currentDir - Current working directory
    * @returns {null} - No directory change
    */
-  ls: async (currentDir) => {
+  ls: async ({ currentDir }) => {
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     
     // Sort: directories first, then files, both in alphabetical order
